@@ -1,0 +1,91 @@
+﻿@model HandMadeCakes.Models.Order
+
+<section class="py-5 bg-light">
+    <div class="container">
+
+        <!-- Cabeçalho -->
+        <div class="row mb-4">
+            <div class="col text-center">
+                <h2 class="fw-bold" style="font-family: 'Playfair Display', serif; color:#7b6e4f;">
+                    Order #@Model.Id
+                </h2>
+                <p class="text-muted fst-italic">Details and status of the order</p>
+            </div>
+        </div>
+
+        <!-- Informações do pedido -->
+        <div class="row mb-5">
+            <div class="col-md-6 offset-md-3">
+                <div class="card p-4 shadow-sm rounded-4">
+                    <p><strong>Customer:</strong> @Model.FullName</p>
+                    <p><strong>Email:</strong> @Model.Email</p>
+                    <p><strong>Address:</strong> @Model.Address</p>
+                    <p><strong>Order Date:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                    <p><strong>Status:</strong> <span class="badge bg-secondary">@Model.Status</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Itens do pedido -->
+        <div class="row mb-5">
+            <div class="col">
+                <h4 class="mb-3" style="color:#7b6e4f;">Order Items</h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Cake ID</th>
+                                <th>Cake</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.OrderItems)
+                            {
+                                <tr>
+                                    <td>@item.CakeId</td>
+                                    <td>@item.Cake.Flavor</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.Price.ToString("C")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Atualização de status -->
+        <div class="row mb-5">
+            <div class="col-md-6 offset-md-3">
+                <h4 class="mb-3" style="color:#7b6e4f;">Update Order Status</h4>
+                <form asp-area="Admin" asp-controller="Order" asp-action="UpdateStatus" method="post">
+                    <input type="hidden" name="id" value="@Model.Id" />
+
+                    <div class="mb-3">
+                        <select name="status" class="form-select">
+                            <option value="Pending" selected="@("Pending" == Model.Status)">Pending</option>
+                            <option value="Processing" selected="@("Processing" == Model.Status)">Processing</option>
+                            <option value="Shipped" selected="@("Shipped" == Model.Status)">Shipped</option>
+                            <option value="Delivered" selected="@("Delivered" == Model.Status)">Delivered</option>
+                            <option value="Cancelled" selected="@("Cancelled" == Model.Status)">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn1 w-100">Save Status</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Voltar -->
+        <div class="row text-center">
+            <div class="col">
+                <a asp-area="Admin" asp-controller="Order" asp-action="Index" class="btn btn-outline-secondary">
+                    ← Back to Orders List
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>

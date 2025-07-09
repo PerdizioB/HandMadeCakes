@@ -1,0 +1,45 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\imagem\iconCake.png" />
+    <Content Remove="wwwroot\imagem\inicio.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
+    <PackageReference Include="Stripe.net" Version="48.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="assets\bootstrap\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\imagem\banner.jpg" />
+    <None Include="wwwroot\imagem\cake.jpg" />
+    <None Include="wwwroot\imagem\cesta.jfif" />
+    <None Include="wwwroot\imagem\doce.jfif" />
+    <None Include="wwwroot\imagem\escrita.jpg" />
+    <None Include="wwwroot\imagem\iconCake.png" />
+    <None Include="wwwroot\imagem\inicio.jpg" />
+  </ItemGroup>
+
+</Project>

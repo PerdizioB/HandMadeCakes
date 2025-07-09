@@ -1,0 +1,258 @@
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f9f4;
+    color: #746d63;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+}
+
+a {
+    color: #ae8c64;
+    text-decoration: none;
+}
+
+    a:hover {
+        color: #cfb484;
+        text-decoration: none;
+    }
+
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+    background-color: #7b6e4f;
+    border-color: #7b6e4f;
+    font-weight: 400;
+}
+
+.btn1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    padding: 10px 30px;
+    background-color: #7b6e4f;
+    border-radius: 0;
+    border: none;
+    color: white;
+    text-transform: uppercase;
+}
+
+    .btn1:hover {
+        background-color: #946f30;
+        color: white;
+    }
+
+section {
+    padding: 60px 0;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 400px;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: url('/imagem/logo.png') center center / cover no-repeat;
+}
+
+    .hero-section img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 320px;
+        width: auto;
+        transform: translate(-50%, -50%);
+        object-fit: contain;
+        filter: brightness(0.75);
+        border-radius: 1rem;
+        user-select: none;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding-top: 150px;
+    color: #7e5e2f;
+}
+
+/* Categories */
+.categories.container {
+    padding-bottom: 60px;
+}
+
+.category-img {
+    height: 140px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .category-img:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+.categories {
+    padding: 2rem 0;
+}
+
+    .categories .category-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+        .categories .category-icon:hover {
+            transform: scale(1.1);
+        }
+
+    .categories .category-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+
+.category-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    user-select: none;
+}
+
+/* Cards */
+.card {
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
+    cursor: pointer;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+.card-body {
+    padding: 1rem 1.25rem;
+}
+
+/* Novo: imagens dos bolos */
+.card-img-top {
+    height: 200px;
+    width: 100%;
+    object-fit: cover;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+/* Text color inside cards */
+.text-body-card {
+    color: #746d63;
+}
+
+/* Form controls */
+.form-control {
+    font-size: 1.1rem;
+    padding: 12px 15px;
+    border-radius: 0.5rem;
+    border: 1.5px solid #ccc;
+    transition: border-color 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #7b6e4f;
+        box-shadow: 0 0 8px rgba(123, 110, 79, 0.3);
+        outline: none;
+    }
+
+/* Labels */
+.form-label {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #5a523f;
+}
+
+/* Botões */
+.btn-success, .btn-secondary {
+    border-radius: 0.5rem;
+    font-size: 1.05rem;
+    padding: 12px 0;
+}
+
+/* Espaçamento maior entre campos */
+.mb-4 {
+    margin-bottom: 1.5rem !important;
+}
+
+/* Cabeçalho do formulário */
+h2.text-center {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: #7b6e4f;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .card {
+        max-width: 100%;
+    }
+
+    .card-img-top {
+        height: 180px;
+    }
+}
+.payment-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+    .payment-container h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #d35400;
+    }
+
+#card-element {
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+#payment-form button {
+    background-color: #d35400;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+    #payment-form button:hover {
+        background-color: #e67e22;
+    }
+
