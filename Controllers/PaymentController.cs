@@ -1,45 +1,40 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HandMadeCakes.Models;
+using Microsoft.AspNetCore.Mvc;
 using Stripe;
-using HandMadeCakes.Models; // seu modelo PaymentRequest
 
-namespace HandMadeCakes.Controllers
+[Route("api/[controller]")]
+[ApiController]
+public class PaymentController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PaymentController : ControllerBase
+    private readonly IConfiguration _configuration;
+
+    public PaymentController(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+        StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+    }
 
-        public PaymentController(IConfiguration configuration)
+    [HttpPost("pay")]
+    public IActionResult Pay([FromBody] PaymentRequest request)
+    {
+        var options = new PaymentIntentCreateOptions
         {
-            _configuration = configuration;
+            Amount = request.Amount,
+            Currency = request.Currency,
+            PaymentMethodTypes = new List<string> { "card" },
+            Description = "Pagamento do pedido de bolo",
+        };
 
-            StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
+        var service = new PaymentIntentService();
+
+        try
+        {
+            var paymentIntent = service.Create(options);
+            return Ok(new { clientSecret = paymentIntent.ClientSecret });
         }
-
-        [HttpPost("pay")]
-        public IActionResult Pay([FromBody] PaymentRequest request)
+        catch (StripeException e)
         {
-            var options = new PaymentIntentCreateOptions
-            {
-                Amount = request.Amount,
-                Currency = request.Currency,
-                PaymentMethodTypes = new List<string> { "card" },
-                Description = "Pagamento do pedido de bolo",
-            };
-
-            var service = new PaymentIntentService();
-
-            try
-            {
-                var paymentIntent = service.Create(options);
-
-                return Ok(new { clientSecret = paymentIntent.ClientSecret });
-            }
-            catch (StripeException e)
-            {
-                return BadRequest(new { error = e.StripeError.Message });
-            }
+            return BadRequest(new { error = e.StripeError.Message });
         }
     }
 }

@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Choose Checkout Method";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container my-5 text-center">
+    <h2>How would you like to proceed?</h2>
+    <p class="lead mb-4">You can sign in to your account or continue as a guest.</p>
+
+    <div class="d-flex justify-content-center gap-4">
+        <a href="/Identity/Account/Login?returnUrl=/Checkout" class="btn btn-primary btn-lg">Sign In</a>
+        <a href="/Checkout/GuestInfo" class="btn btn-outline-secondary btn-lg">Continue as Guest</a>
+    </div>
+</div>

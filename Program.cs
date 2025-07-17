@@ -3,7 +3,7 @@ using HandMadeCakes.Models;
 using HandMadeCakes.Services;
 using HandMadeCakes.Services.Cake;
 using HandMadeCakes.Services.Cart;
-using HandMadeCakes.Services.Checkout;
+using HandMadeCakes.Services.Order;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

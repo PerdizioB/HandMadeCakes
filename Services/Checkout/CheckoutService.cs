@@ -1,51 +1,29 @@
-﻿using HandMadeCakes.Data;
-using HandMadeCakes.Models;
+﻿using HandMadeCakes.Services;
 using HandMadeCakes.Services.Cart;
+using HandMadeCakes.Services.Order;
 using HandMadeCakes.ViewModels;
-using System.Linq;
-using System.Threading.Tasks;
-using OrderModel = HandMadeCakes.Models.Order;
 
-
-namespace HandMadeCakes.Services.Checkout
+public class CheckoutService : ICheckoutService
 {
-    public class CheckoutService : ICheckoutService
+    private readonly IOrderService _orderService;
+    private readonly ICartService _cartService;
+
+    public CheckoutService(IOrderService orderService, ICartService cartService)
     {
-        private readonly IOrderRepository _orderRepository;
-        private readonly ICartService _cartService;
+        _orderService = orderService;
+        _cartService = cartService;
+    }
 
-        public CheckoutService(IOrderRepository orderRepository, ICartService cartService)
-        {
-            _orderRepository = orderRepository;
-            _cartService = cartService;
-        }
+    public async Task<bool> ProcessOrderAsync(CheckoutViewModel checkout)
+    {
+        var cartItems = _cartService.GetCartItems();
 
-        public async Task<bool> ProcessOrderAsync(CheckoutViewModel checkout)
-        {
-            var cartItems = _cartService.GetCartItems();
+        if (cartItems == null || !cartItems.Any())
+            return false; // Carrinho vazio
 
-            if (cartItems == null || !cartItems.Any())
-                return false; // Carrinho vazio
+        await _orderService.CreateOrderAsync(checkout, cartItems);
+        _cartService.ClearCart();
 
-            var order = new OrderModel
-            {
-                FullName = checkout.Name,
-                Email = checkout.Email,
-                Address = checkout.Address,
-                OrderDate = DateTime.Now,
-                OrderItems = cartItems.Select(ci => new OrderItem
-                {
-                    CakeId = ci.CakeId,
-                    Quantity = ci.Quantity,
-                    Price = (decimal)ci.Price
-                }).ToList(),
-                TotalAmount = (decimal)cartItems.Sum(ci => ci.Price * ci.Quantity)
-            };
-
-            await _orderRepository.SaveOrderAsync(order);
-            _cartService.ClearCart();
-
-            return true;
-        }
+        return true;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using HandMadeCakes.Services;
-using HandMadeCakes.Services.Checkout;
 using HandMadeCakes.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -22,18 +21,26 @@ namespace HandMadeCakes.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
+        [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> Index(CheckoutViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Processa o pedido (salvar no banco, criar ordem, etc)
             var success = await _checkoutService.ProcessOrderAsync(model);
             if (success)
-                return RedirectToAction("Confirmation");
+            {
+                // Redireciona para a tela de pagamento
+                return RedirectToAction("Payment");
+            }
 
             ModelState.AddModelError("", "Order failed. Try again.");
             return View(model);
         }
+
 
         [HttpGet]
         public IActionResult Payment()
