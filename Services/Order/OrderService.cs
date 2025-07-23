@@ -18,7 +18,7 @@ namespace HandMadeCakes.Services.Order
             _context = context;
         }
 
-        public async Task CreateOrderAsync(CheckoutViewModel checkoutData, IEnumerable<CartItem> cartItems)
+        public async Task<int> CreateOrderAsync(CheckoutViewModel checkoutData, List<CartItem> cartItems)
         {
             var order = new HandMadeCakes.Models.Order
             {
@@ -33,10 +33,24 @@ namespace HandMadeCakes.Services.Order
                     Quantity = item.Quantity,
                     Price = (decimal)item.Price
                 }).ToList(),
-                TotalAmount = (decimal)cartItems.Sum(i => i.Price * i.Quantity)
+                TotalAmount = (decimal)cartItems.Sum(i => i.Price * i.Quantity),
+                IsPaid = false // importante!
             };
 
             await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+
+            return order.Id; // retorna o ID do pedido gerado
+        }
+
+        public async Task MarkAsPaidAsync(int orderId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+
+            if (order == null)
+                throw new Exception("Pedido não encontrado.");
+
+            order.IsPaid = true;
             await _context.SaveChangesAsync();
         }
     }

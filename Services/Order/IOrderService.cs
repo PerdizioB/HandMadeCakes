@@ -7,6 +7,7 @@ namespace HandMadeCakes.Services.Order
 {
     public interface IOrderService
     {
-        Task CreateOrderAsync(CheckoutViewModel checkoutData, IEnumerable<CartItem> cartItems);
+        Task<int> CreateOrderAsync(CheckoutViewModel checkoutData, List<CartItem> cartItems);
+        Task MarkAsPaidAsync(int orderId);
     }
 }

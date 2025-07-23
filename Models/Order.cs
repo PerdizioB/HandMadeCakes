@@ -15,6 +15,8 @@
         public decimal TotalAmount { get; set; }
         public string? UserId { get; set; }
 
+        public bool IsPaid { get; set; } = false;
+
         public ApplicationUser User { get; set; }
 
 

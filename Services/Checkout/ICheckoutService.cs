@@ -5,6 +5,6 @@ namespace HandMadeCakes.Services
 {
     public interface ICheckoutService
     {
-        Task<bool> ProcessOrderAsync(CheckoutViewModel checkout);
+        Task<int?> ProcessOrderAsync(CheckoutViewModel model);
     }
 }

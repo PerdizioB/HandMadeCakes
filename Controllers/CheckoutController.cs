@@ -1,4 +1,5 @@
 ﻿using HandMadeCakes.Services;
+using HandMadeCakes.Services.Order;
 using HandMadeCakes.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -8,10 +9,13 @@ namespace HandMadeCakes.Controllers
     public class CheckoutController : Controller
     {
         private readonly ICheckoutService _checkoutService;
+        private readonly IOrderService _orderService;
 
-        public CheckoutController(ICheckoutService checkoutService)
+
+        public CheckoutController(ICheckoutService checkoutService, IOrderService orderService)
         {
             _checkoutService = checkoutService;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -21,20 +25,16 @@ namespace HandMadeCakes.Controllers
         }
 
         [HttpPost]
-        [HttpPost]
-        [HttpPost]
-        [HttpPost]
         public async Task<IActionResult> Index(CheckoutViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            // Processa o pedido (salvar no banco, criar ordem, etc)
-            var success = await _checkoutService.ProcessOrderAsync(model);
-            if (success)
+            var orderId = await _checkoutService.ProcessOrderAsync(model);
+
+            if (orderId.HasValue)
             {
-                // Redireciona para a tela de pagamento
-                return RedirectToAction("Payment");
+                return RedirectToAction("Payment", new { orderId = orderId.Value });
             }
 
             ModelState.AddModelError("", "Order failed. Try again.");
@@ -43,44 +43,17 @@ namespace HandMadeCakes.Controllers
 
 
         [HttpGet]
-        public IActionResult Payment()
+        public IActionResult Payment(int orderId)
         {
-            return View();
+            var model = new PaymentViewModel { OrderId = orderId };
+            return View(model);
         }
+
 
         public IActionResult Confirmation()
         {
             return View();
         }
-
-        [HttpPost]
-        public async Task<IActionResult> ConfirmPayment([FromBody] PaymentConfirmationViewModel model)
-        {
-            // Exemplo de model:
-            // public class PaymentConfirmationViewModel
-            // {
-            //    public string PaymentIntentId { get; set; }
-            //    public int OrderId { get; set; } // opcional
-            // }
-
-            if (string.IsNullOrEmpty(model.PaymentIntentId))
-                return BadRequest("PaymentIntentId é obrigatório.");
-
-            // Aqui você pode chamar o Stripe API para verificar o status do PaymentIntent
-            var service = new Stripe.PaymentIntentService();
-            var paymentIntent = await service.GetAsync(model.PaymentIntentId);
-
-            if (paymentIntent.Status == "succeeded")
-            {
-                // Atualize seu pedido no banco de dados como pago
-                // await _orderService.MarkAsPaid(model.OrderId);
-
-                return Ok(new { success = true });
-            }
-
-            return BadRequest(new { success = false, message = "Pagamento não confirmado." });
-        }
-
 
     }
 }

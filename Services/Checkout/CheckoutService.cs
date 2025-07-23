@@ -1,29 +1,32 @@
-﻿using HandMadeCakes.Services;
+﻿using HandMadeCakes.Services.Order;
 using HandMadeCakes.Services.Cart;
-using HandMadeCakes.Services.Order;
 using HandMadeCakes.ViewModels;
+using System.Threading.Tasks;
 
-public class CheckoutService : ICheckoutService
+namespace HandMadeCakes.Services
 {
-    private readonly IOrderService _orderService;
-    private readonly ICartService _cartService;
-
-    public CheckoutService(IOrderService orderService, ICartService cartService)
+    public class CheckoutService : ICheckoutService
     {
-        _orderService = orderService;
-        _cartService = cartService;
-    }
+        private readonly IOrderService _orderService;
+        private readonly ICartService _cartService;
 
-    public async Task<bool> ProcessOrderAsync(CheckoutViewModel checkout)
-    {
-        var cartItems = _cartService.GetCartItems();
+        public CheckoutService(IOrderService orderService, ICartService cartService)
+        {
+            _orderService = orderService;
+            _cartService = cartService;
+        }
 
-        if (cartItems == null || !cartItems.Any())
-            return false; // Carrinho vazio
+        public async Task<int?> ProcessOrderAsync(CheckoutViewModel checkout)
+        {
+            var cartItems = _cartService.GetCartItems();
 
-        await _orderService.CreateOrderAsync(checkout, cartItems);
-        _cartService.ClearCart();
+            if (cartItems == null || !cartItems.Any())
+                return null; // Carrinho vazio
 
-        return true;
+            var orderId = await _orderService.CreateOrderAsync(checkout, cartItems);
+            _cartService.ClearCart();
+
+            return orderId;
+        }
     }
 }

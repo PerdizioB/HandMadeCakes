@@ -1,9 +1,12 @@
-﻿@{
+﻿@model HandMadeCakes.ViewModels.PaymentViewModel
+
+@{
     ViewData["Title"] = "Pagamento - HandMadeCakes";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var orderId = Model?.OrderId ?? 0;
 }
 
-<div class="payment-container">
+<div class="payment-container" data-order-id="@orderId">
     <h2>@ViewData["Title"]</h2>
 
     <form id="payment-form">
@@ -11,12 +14,13 @@
         <button type="submit">Pagar</button>
     </form>
 </div>
-
 @section Scripts {
     <script src="https://js.stripe.com/v3/"></script>
 
     <script>
         const stripePublicKey = "@(Context.RequestServices.GetService<IConfiguration>()["Stripe:PublicKey"])";
+        const orderId = @orderId;  // aqui o Razor insere o valor numérico
+        console.log("OrderId no JS:", orderId);
     </script>
 
     <script src="~/js/payment.js"></script>

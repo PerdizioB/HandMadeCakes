@@ -1,9 +1,7 @@
 ﻿const stripe = Stripe(stripePublicKey);
 const elements = stripe.elements();
 
-const card = elements.create("card", {
-    hidePostalCode: true
-});
+const card = elements.create("card", { hidePostalCode: true });
 card.mount("#card-element");
 
 const form = document.getElementById("payment-form");
@@ -11,16 +9,20 @@ const form = document.getElementById("payment-form");
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    // Aqui você monta o objeto com os dados do pagamento (ajuste conforme necessário)
     const paymentData = {
-        amount: 1000,  // valor em centavos, ajuste para o seu valor real
-        currency: "gbp"
+        amount: 1000, // valor em centavos, ex: £10.00
+        currency: "gbp",
+        orderId: orderId // variável definida na view
     };
 
     try {
-        const response = await fetch("/api/payment/pay", {
+        // 1. Chama o backend para criar o PaymentIntent (API que você implementou: /api/payment/pay)
+        const response = await fetch("https://45c1ce367562.ngrok-free.app/api/payment/pay", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(paymentData)
+            body: JSON.stringify(paymentData),
+            credentials: "include"
         });
 
         const data = await response.json();
@@ -32,6 +34,7 @@ form.addEventListener("submit", async (e) => {
 
         const clientSecret = data.clientSecret;
 
+        // 2. Usa o clientSecret para confirmar o pagamento com o cartão
         const result = await stripe.confirmCardPayment(clientSecret, {
             payment_method: { card }
         });
@@ -40,7 +43,7 @@ form.addEventListener("submit", async (e) => {
             alert(result.error.message);
         } else if (result.paymentIntent.status === "succeeded") {
             alert("Pagamento aprovado!");
-            window.location.href = "/Checkout/Confirmation"; // redireciona para a confirmação
+            window.location.href = "/Checkout/Confirmation";
         }
     } catch (err) {
         alert("Erro no processamento do pagamento: " + err.message);
