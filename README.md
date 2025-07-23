@@ -70,7 +70,7 @@ stripe listen --forward-to localhost:5001/api/payment/webhook
 
 ---
 
-## 📦 Estrutura de Pastas
+## 📦 Folder Structure
 
 - `Controllers/` — Control logic (Cart, Checkout, Admin, etc.)
 - `Models/` —Domain classes: Cake, Order, User, etc.
