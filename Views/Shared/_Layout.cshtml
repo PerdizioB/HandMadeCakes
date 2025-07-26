@@ -134,26 +134,30 @@
 
     <section class="hero-section container" style="@(isAdmin ? "margin-left: 220px;" : "")">
         <div class="hero-content">
-            <h1 class="display-5 fw-bold">Fresh Handmade Cakes!</h1>
-            <p class="lead">Delicious, beautiful, and made with love.</p>
-            <a href="#" class="btn1 mt-3">Shop Now</a>
+        @*     <h1 class="display-5 fw-bold">Fresh Handmade Cakes!</h1> *@
+           @*  <p class="lead">Delicious, beautiful, and made with love.</p> *@
+            <a href="@Url.Action("Index", "Cake")" class="btn1 mt-3 rounded">Shop Now</a>
         </div>
     </section>
 
     <section class="categories container mb-5 d-flex justify-content-center gap-5" style="@(isAdmin ? "margin-left: 220px;" : "")">
-        <a href="@Url.Action("Index", "Store", new { category = "Candy" })" class="category-icon text-center text-decoration-none text-dark">
-            <img src="/imagem/cesta.jpg" alt="Candy category" class="category-img" />
-            <div class="category-label mt-2">Candy</div>
+        <a href="@Url.Action("Index", "Store", new { category = "Sweet" })" class="category-icon text-center text-decoration-none text-dark">
+            <img src="/imagem/cesta.jpg" alt="Sweet category" class="category-img" />
+            <div class="category-label mt-2">Sweets</div>
         </a>
-        <a href="@Url.Action("Index", "Store", new { category = "Rolls" })" class="category-icon text-center text-decoration-none text-dark">
-            <img src="/imagem/cesta.jpg" alt="Rolls category" class="category-img" />
-            <div class="category-label mt-2">Rolls</div>
+
+        <a href="@Url.Action("Index", "Store", new { category = "Savoury" })" class="category-icon text-center text-decoration-none text-dark">
+            <img src="/imagem/cesta.jpg" alt="Savoury category" class="category-img" />
+            <div class="category-label mt-2">Savories</div>
         </a>
-        <a href="@Url.Action("Index", "Store", new { category = "Cakes" })" class="category-icon text-center text-decoration-none text-dark">
-            <img src="/imagem/cesta.jpg" alt="Cakes category" class="category-img" />
+
+        <a href="@Url.Action("Index", "Store", new { category = "Cake" })" class="category-icon text-center text-decoration-none text-dark">
+            <img src="/imagem/cesta.jpg" alt="Cake category" class="category-img" />
             <div class="category-label mt-2">Cakes</div>
         </a>
+
     </section>
+
 
     <div class="container my-5" style="@(isAdmin ? "margin-left: 220px;" : "")">
         <main role="main" class="pb-3">

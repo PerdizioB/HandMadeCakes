@@ -1,15 +1,12 @@
 ﻿using HandMadeCakes.Models;
 using HandMadeCakes.Models.Enums;
 using HandMadeCakes.Services.Product;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace HandMadeCakes.Areas.Admin.Controllers
+namespace HandMadeCakes.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "Admin")]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -19,14 +16,14 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             _productService = productService;
         }
 
-        // GET: Admin/Product
+        // GET: /Product
         public async Task<IActionResult> Index()
         {
             var products = await _productService.GetAllAsync();
             return View(products);
         }
 
-        // GET: Admin/Product/Details/5
+        // GET: /Product/Details/5
         public async Task<IActionResult> Details(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -36,14 +33,14 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             return View(product);
         }
 
-        // GET: Admin/Product/Create
+        // GET: /Product/Create
         public IActionResult Create()
         {
-           // ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
+            ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
             return View();
         }
 
-        // POST: Admin/Product/Create
+        // POST: /Product/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProductModel product)
@@ -58,7 +55,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Product/Edit/5
+        // GET: /Product/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -69,7 +66,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             return View(product);
         }
 
-        // POST: Admin/Product/Edit/5
+        // POST: /Product/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, ProductModel product)
@@ -87,7 +84,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Product/Delete/5
+        // GET: /Product/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _productService.GetByIdAsync(id);
@@ -97,7 +94,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             return View(product);
         }
 
-        // POST: Admin/Product/Delete/5
+        // POST: /Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,0 +1,35 @@
+﻿@using HandMadeCakes.Models
+@model ProductModel
+
+@{
+    ViewData["Title"] = "Delete Product";
+}
+
+<h1>Delete Product</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+
+<div>
+    <h4>@Model.Name</h4>
+    <p>
+        <strong>Category:</strong> @Model.Category.ToString() <br />
+        <strong>Price:</strong> @Model.Price.ToString("C") <br />
+        <strong>Description:</strong> @Model.Description <br />
+        <strong>Cover:</strong>
+        @if (!string.IsNullOrEmpty(Model.Cover))
+        {
+            <br />
+            <img src="@Model.Cover" alt="Cover Image" style="max-width:200px; max-height:200px;" />
+        }
+        else
+        {
+            <span>No image</span>
+        }
+    </p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

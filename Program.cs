@@ -4,6 +4,7 @@ using HandMadeCakes.Services;
 using HandMadeCakes.Services.Cake;
 using HandMadeCakes.Services.Cart;
 using HandMadeCakes.Services.Order;
+using HandMadeCakes.Services.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,8 @@ builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+;
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

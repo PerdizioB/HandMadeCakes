@@ -12,9 +12,10 @@ public class CakeController : Controller
         _cakeInterface = cakeInterface;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? category)
     {
         var cakes = await _cakeInterface.GetCakes();
+       
         return View(cakes);
     }
 

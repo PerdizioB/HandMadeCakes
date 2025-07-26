@@ -1,5 +1,6 @@
 ﻿
 using HandMadeCakes.Models;
+using HandMadeCakes.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace HandMadeCakes.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<CakeImage> CakeImages { get; set; }
+        public DbSet<ProductModel> Product { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

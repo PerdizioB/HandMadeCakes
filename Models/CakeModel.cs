@@ -10,6 +10,8 @@ namespace HandMadeCakes.Models
         public string Cover { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public double Price { get; set; }
+        public string Category { get; set; }  // Candy, Rolls, Cakes
+
         public List<CakeImage> Images { get; set; } = new List<CakeImage>();
 
 

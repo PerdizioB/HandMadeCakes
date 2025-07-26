@@ -7,15 +7,14 @@
     ViewData["Title"] = "Home";
     var isAdmin = User.IsInRole("Admin");
 }
-
 <div class="py-5 bg-light">
     <div class="container">
         <div class="row mb-5">
             <div class="col-lg-6 mx-auto text-center">
-                <h1 class="display-4 fw-bold" style="font-family: 'Playfair Display', serif; color:#b71c1c;">
+                <h1 class="display-4 fw-bold" style="font-family: 'Playfair Display', serif; color: #7b6e4f;">
                     Celebrate In Style
                 </h1>
-                <h5 class="text-danger fst-italic mt-2">Birthday Cakes</h5>
+                <h5 class="fst-italic mt-2" style="color: #748c5b;">Birthday Cakes</h5>
             </div>
         </div>
 
@@ -31,8 +30,7 @@
                             </a>
 
                             <div class="card-body text-center">
-                                <h6 class="card-title text-truncate fw-semibold" title="@cake.Flavor">@cake.Flavor</h6>
-                                <p class="text-muted mb-2 small">Delicious and perfect for your event</p>
+                                <h6 class="card-title text-truncate fw-semibold" title="@cake.Flavor" style="color: #7b6e4f;">@cake.Flavor</h6>
 
                                 <div class="d-grid gap-2">
                                     <a asp-controller="Cake" asp-action="Details" asp-route-id="@cake.Id" class="btn btn-primary btn-sm">

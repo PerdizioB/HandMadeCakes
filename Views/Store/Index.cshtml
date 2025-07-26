@@ -1,0 +1,26 @@
+﻿@model IEnumerable<HandMadeCakes.Models.ProductModel>
+
+<h1>Store</h1>
+
+@if (!Model.Any())
+{
+    <p>No products found in this category.</p>
+}
+else
+{
+    <div class="row">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@product.Cover" alt="@product.Name" class="card-img-top" />
+                    <div class="card-body">
+                        <h5 class="card-title">@product.Name</h5>
+                        <p class="card-text">@product.Description</p>
+                        <strong>@product.Price.ToString("C")</strong>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
