@@ -39,24 +39,11 @@ namespace HandMadeCakes.Areas.Admin.Controllers
         // GET: Admin/Product/Create
         public IActionResult Create()
         {
-           // ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
+            // ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
             return View();
         }
 
-        // POST: Admin/Product/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductModel product)
-        {
-            if (!ModelState.IsValid)
-            {
-                ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
-                return View(product);
-            }
 
-            await _productService.CreateAsync(product);
-            return RedirectToAction(nameof(Index));
-        }
 
         // GET: Admin/Product/Edit/5
         public async Task<IActionResult> Edit(int id)
@@ -105,6 +92,69 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             var deleted = await _productService.DeleteAsync(id);
             if (!deleted)
                 return NotFound();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ProductModel product, IFormFile foto, List<IFormFile> extraImages)
+        {
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
+                return View(product);
+            }
+
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+
+            // cria a pasta caso não exista
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
+
+            // imagem principal
+            if (foto != null && foto.Length > 0)
+            {
+                var fileName = Guid.NewGuid() + Path.GetExtension(foto.FileName);
+                var filePath = Path.Combine(folder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await foto.CopyToAsync(stream);
+                }
+
+                product.Cover = "/images/products/" + fileName;
+            }
+
+            // imagens adicionais
+            if (extraImages != null && extraImages.Count > 0)
+            {
+                product.Images = new List<ProductImage>();
+
+                foreach (var image in extraImages)
+                {
+                    if (image.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid() + Path.GetExtension(image.FileName);
+                        var filePath = Path.Combine(folder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await image.CopyToAsync(stream);
+                        }
+
+                        product.Images.Add(new ProductImage
+                        {
+                            ImagePath = "/images/products/" + fileName
+                        });
+                    }
+                }
+            }
+
+            // salva no banco
+            await _productService.CreateAsync(product);
 
             return RedirectToAction(nameof(Index));
         }

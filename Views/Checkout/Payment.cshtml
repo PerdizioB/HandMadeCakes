@@ -1,26 +1,30 @@
 ﻿@model HandMadeCakes.ViewModels.PaymentViewModel
 
 @{
-    ViewData["Title"] = "Pagamento - HandMadeCakes";
+    ViewData["Title"] = "Payment - HandMadeCakes";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var orderId = Model?.OrderId ?? 0;
 }
 
 <div class="payment-container" data-order-id="@orderId">
-    <h2>@ViewData["Title"]</h2>
+    <h2 class="mb-4">@ViewData["Title"]</h2>
 
     <form id="payment-form">
-        <div id="card-element"></div>
-        <button type="submit">Pagar</button>
+        <div id="card-element" class="mb-3">
+            <!-- Stripe Card Element will be inserted here -->
+        </div>
+        <button type="submit" class="btn btn-success w-100 rounded-pill">Pay Now</button>
     </form>
 </div>
+
 @section Scripts {
     <script src="https://js.stripe.com/v3/"></script>
 
     <script>
         const stripePublicKey = "@(Context.RequestServices.GetService<IConfiguration>()["Stripe:PublicKey"])";
-        const orderId = @orderId;  // aqui o Razor insere o valor numérico
-        console.log("OrderId no JS:", orderId);
+        const orderId = @orderId;
+
+        console.log("Order ID in JS:", orderId);
     </script>
 
     <script src="~/js/payment.js"></script>

@@ -1,6 +1,6 @@
 ﻿using HandMadeCakes.Data;
 using HandMadeCakes.Models;
-using HandMadeCakes.Services.Order;
+using HandMadeCakes.Services.Orders;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -36,7 +36,7 @@ public class PaymentController : ControllerBase
             Amount = request.Amount,
             Currency = request.Currency,
             PaymentMethodTypes = new List<string> { "card" },
-            Description = "Pagamento do pedido de bolo",
+            Description = "Cake order payment",
             Metadata = new Dictionary<string, string>
         {
             { "OrderId", request.OrderId.ToString() }
@@ -104,11 +104,11 @@ public class PaymentController : ControllerBase
                 && int.TryParse(orderIdStr, out int orderId))
             {
                 await _orderService.MarkAsPaidAsync(orderId);
-                Console.WriteLine($"✅ Pedido {orderId} marcado como pago.");
+                Console.WriteLine($" Pedido {orderId} marcado como pago.");
             }
             else
             {
-                Console.WriteLine("⚠️ OrderId inválido ou ausente no metadata.");
+                Console.WriteLine("Invalid or missing OrderId in metadata.");
             }
         }
 

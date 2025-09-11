@@ -22,5 +22,7 @@ namespace HandMadeCakes.Models
         public string Description { get; set; } = string.Empty;
 
         public string Cover { get; set; } = string.Empty;
+
+        public List<ProductImage> Images { get; set; } = new List<ProductImage>();
     }
 }

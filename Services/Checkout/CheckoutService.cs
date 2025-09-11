@@ -1,7 +1,8 @@
-﻿using HandMadeCakes.Services.Order;
+﻿using HandMadeCakes.Services.Orders;
 using HandMadeCakes.Services.Cart;
 using HandMadeCakes.ViewModels;
 using System.Threading.Tasks;
+using HandMadeCakes.Services.Orders;
 
 namespace HandMadeCakes.Services
 {

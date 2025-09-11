@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Shopping Cart";
     var subtotal = Model.Sum(item => item.Price * item.Quantity);
-    var shipping = 10.0; // Frete fixo
+    var shipping = 10.0; // Fixed shipping
     var total = subtotal + shipping;
 }
 
@@ -28,7 +28,7 @@
                                 <small>Quantity: @item.Quantity</small>
                             </div>
                             <div>
-                                <p class="mb-0 fw-bold">$@String.Format("{0:0.00}", item.Price * item.Quantity)</p>
+                                <p class="mb-0 fw-bold">@((item.Price * item.Quantity).ToString("C"))</p>
                                 <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.CakeId" class="btn btn-sm btn-outline-danger ms-2">
                                     <i class="bi bi-trash"></i> Remove
                                 </a>
@@ -49,20 +49,23 @@
                     <h5 class="card-title">Order Summary</h5>
                     <div class="d-flex justify-content-between">
                         <span>Subtotal:</span>
-                        <span>$@String.Format("{0:0.00}", subtotal)</span>
+                        <span>@subtotal.ToString("C")</span>
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Shipping:</span>
-                        <span>$@String.Format("{0:0.00}", shipping)</span>
+                        <span>@shipping.ToString("C")</span>
                     </div>
                     <hr />
                     <div class="d-flex justify-content-between fw-bold">
                         <span>Total:</span>
-                        <span>$@String.Format("{0:0.00}", total)</span>
+                        <span>@total.ToString("C")</span>
                     </div>
-                    <a asp-controller="Checkout" asp-action="Index" class="btn btn-primary w-100 mt-3 rounded-pill">
-                        Proceed to Checkout
-                    </a>
+                    <form method="post" asp-controller="Cart" asp-action="ProceedToCheckout">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            Proceed to Checkout
+                        </button>
+                    </form>
+
                 </div>
             </div>
         </div>

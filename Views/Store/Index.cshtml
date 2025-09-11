@@ -2,12 +2,7 @@
 
 <h1>Store</h1>
 
-@if (!Model.Any())
-{
-    <p>No products found in this category.</p>
-}
-else
-{
+
     <div class="row">
         @foreach (var product in Model)
         {

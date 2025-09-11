@@ -1,13 +1,13 @@
 ﻿using HandMadeCakes.Data;
 using HandMadeCakes.Models;
+using HandMadeCakes.Services.Orders;
 using HandMadeCakes.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HandMadeCakes.Services.Order
+namespace HandMadeCakes.Services.Orders
 {
     public class OrderService : IOrderService
     {
@@ -20,27 +20,48 @@ namespace HandMadeCakes.Services.Order
 
         public async Task<int> CreateOrderAsync(CheckoutViewModel checkoutData, List<CartItem> cartItems)
         {
-            var order = new HandMadeCakes.Models.Order
+            var order = new Order
             {
                 FullName = checkoutData.FullName,
                 Address = checkoutData.Address,
                 Phone = checkoutData.Phone,
                 Email = checkoutData.Email,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
+                Status = "Pending",
+                IsPaid = false,
                 OrderItems = cartItems.Select(item => new OrderItem
                 {
                     CakeId = item.CakeId,
                     Quantity = item.Quantity,
                     Price = (decimal)item.Price
                 }).ToList(),
-                TotalAmount = (decimal)cartItems.Sum(i => i.Price * i.Quantity),
-                IsPaid = false // importante!
+                TotalAmount = (decimal)cartItems.Sum(i => i.Price * i.Quantity)
             };
 
             await _context.Orders.AddAsync(order);
             await _context.SaveChangesAsync();
 
-            return order.Id; // retorna o ID do pedido gerado
+            return order.Id;
+        }
+
+        public async Task<Order> CreateGuestOrderAsync(Order order, List<CartItem> cartItems)
+        {
+            order.TotalAmount = cartItems.Sum(i => i.Quantity * (decimal)i.Price);
+            order.Status = "Pending";
+            order.OrderDate = DateTime.UtcNow;
+            order.IsPaid = false;
+
+            order.OrderItems = cartItems.Select(item => new OrderItem
+            {
+                CakeId = item.CakeId,
+                Quantity = item.Quantity,
+                Price = (decimal)item.Price
+            }).ToList();
+
+            await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
+
+            return order;
         }
 
         public async Task MarkAsPaidAsync(int orderId)

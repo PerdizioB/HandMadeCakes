@@ -12,10 +12,10 @@ public class CakeController : Controller
         _cakeInterface = cakeInterface;
     }
 
-    public async Task<IActionResult> Index(string? category)
+    public async Task<IActionResult> Index()
     {
         var cakes = await _cakeInterface.GetCakes();
-       
+
         return View(cakes);
     }
 
@@ -39,7 +39,7 @@ public class CakeController : Controller
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao registrar bolo: " + ex.Message);
+                ModelState.AddModelError("", "Error registering cake: " + ex.Message);
             }
         }
         return View(cakeCreateDto);
@@ -63,9 +63,12 @@ public class CakeController : Controller
         return RedirectToAction("Index", "Cake");
     }
 
+
     [HttpPost]
-    public async Task<IActionResult> Editar(CakeModel cakeModel, IFormFile? foto, List<IFormFile>? fotos)
+    public async Task<IActionResult> Edit(CakeModel cakeModel, IFormFile? foto, List<IFormFile>? fotos)
     {
+        ModelState.Remove("Category");
+
         if (ModelState.IsValid)
         {
             try
@@ -75,9 +78,13 @@ public class CakeController : Controller
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", "Erro ao editar bolo: " + ex.Message);
+                ModelState.AddModelError("", "Error editing cake: " + ex.Message);
             }
         }
-        return View(cakeModel);
+
+        // Recarrega as imagens para não quebrar a view
+        var cakeWithImages = await _cakeInterface.GetCakePorId(cakeModel.Id);
+        return View(cakeWithImages);
     }
+
 }

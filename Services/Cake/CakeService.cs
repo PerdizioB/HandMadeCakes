@@ -24,7 +24,7 @@ namespace HandMadeCakes.Services.Cake
                                 .Replace(" ", "")
                                 .ToLower() + "_" + codigoUnico + Path.GetExtension(foto.FileName);
 
-            var caminhoPasta = Path.Combine(_sistema, "imagem");
+            var caminhoPasta = Path.Combine(_sistema, "image");
 
             if (!Directory.Exists(caminhoPasta))
                 Directory.CreateDirectory(caminhoPasta);
@@ -42,7 +42,7 @@ namespace HandMadeCakes.Services.Cake
         public async Task<CakeModel> CriarCake(CakeCreateDto cakeCreateDto, IFormFile coverFoto, List<IFormFile>? fotos)
         {
             if (coverFoto == null)
-                throw new Exception("A imagem principal (capa) é obrigatória.");
+                throw new Exception("The main image (cover) is required.");
 
             var nomeCaminhoCover = GeraCaminhoArquivo(coverFoto);
 
@@ -84,7 +84,7 @@ namespace HandMadeCakes.Services.Cake
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter bolos: " + ex.Message);
+                throw new Exception("Error fetching cakes: " + ex.Message);
             }
         }
 
@@ -98,31 +98,32 @@ namespace HandMadeCakes.Services.Cake
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao obter bolo por id: " + ex.Message);
+                throw new Exception("Error fetching cake by id: " + ex.Message);
             }
         }
 
         public async Task<CakeModel> Edit(CakeModel Cake, IFormFile? coverFoto, List<IFormFile>? fotos)
         {
+            //DB fetch
             var cakeBanco = await _context.Cake.Include(c => c.Images).FirstOrDefaultAsync(c => c.Id == Cake.Id);
-            if (cakeBanco == null) throw new Exception("Bolo não encontrado");
+            if (cakeBanco == null) throw new Exception("Cake not found.");
 
-            // Atualiza capa
+            // Update cover image
             if (coverFoto != null)
             {
                 var caminhoCoverExistente = Path.Combine(_sistema, "imagem", cakeBanco.Cover);
-                if (File.Exists(caminhoCoverExistente))
+                if (File.Exists(caminhoCoverExistente)) // Delete existing cover image
                     File.Delete(caminhoCoverExistente);
 
-                cakeBanco.Cover = GeraCaminhoArquivo(coverFoto);
+                cakeBanco.Cover = GeraCaminhoArquivo(coverFoto);// Save new cover image  (generates unique filename )
             }
 
-            // Atualiza dados básicos
+            // Update basic data
             cakeBanco.Flavor = Cake.Flavor;
             cakeBanco.Description = Cake.Description;
             cakeBanco.Price = Cake.Price;
 
-            // Salva as novas imagens extras, se houver
+            // Save new extra images, if any
             if (fotos != null && fotos.Any())
             {
                 foreach (var foto in fotos)
@@ -147,7 +148,7 @@ namespace HandMadeCakes.Services.Cake
             {
                 var cake = await _context.Cake.FirstOrDefaultAsync(c => c.Id == id);
                 if (cake == null)
-                    throw new Exception("Bolo não encontrado");
+                    throw new Exception("Cake not found.");
 
                 _context.Remove(cake);
                 await _context.SaveChangesAsync();
@@ -156,7 +157,7 @@ namespace HandMadeCakes.Services.Cake
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao remover bolo: " + ex.Message);
+                throw new Exception("Error removing cake: " + ex.Message);
             }
         }
 
@@ -170,11 +171,11 @@ namespace HandMadeCakes.Services.Cake
             }
             catch (Exception ex)
             {
-                throw new Exception("Erro ao filtrar bolos: " + ex.Message);
+                throw new Exception("Error filtering cakes: " + ex.Message);
             }
         }
 
-        // Métodos não implementados podem ficar com NotImplementedException
+        // Unimplemented methods can throw NotImplementedException
         public Task<List<CakeModel>> GetCake()
             => throw new NotImplementedException();
 

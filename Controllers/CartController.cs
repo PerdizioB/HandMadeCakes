@@ -22,6 +22,20 @@ namespace HandMadeCakes.Controllers
         }
 
         [HttpPost]
+        public IActionResult ProceedToCheckout()
+        {
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Checkout"); // Ou outra action para usuários logados
+            }
+            else
+            {
+                return RedirectToAction("Choose", "Checkout");
+            }
+        }
+
+
+        [HttpPost]
         public IActionResult Add(int id, string name, double price)
         {
             var item = new CartItem

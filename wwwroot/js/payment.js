@@ -9,7 +9,7 @@ const form = document.getElementById("payment-form");
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Aqui você monta o objeto com os dados do pagamento (ajuste conforme necessário)
+    // Aqui monta o objeto com os dados do pagamento
     const paymentData = {
         amount: 1000, // valor em centavos, ex: £10.00
         currency: "gbp",
@@ -17,7 +17,7 @@ form.addEventListener("submit", async (e) => {
     };
 
     try {
-        // 1. Chama o backend para criar o PaymentIntent (API que você implementou: /api/payment/pay)
+        // 1. Chama o backend para criar o PaymentIntent (API que  implementou: /api/payment/pay)
         const response = await fetch("https://45c1ce367562.ngrok-free.app/api/payment/pay", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -42,10 +42,10 @@ form.addEventListener("submit", async (e) => {
         if (result.error) {
             alert(result.error.message);
         } else if (result.paymentIntent.status === "succeeded") {
-            alert("Pagamento aprovado!");
+            alert("Payment approved!");
             window.location.href = "/Checkout/Confirmation";
         }
     } catch (err) {
-        alert("Erro no processamento do pagamento: " + err.message);
+        alert("Error processing the payment: " + err.message);
     }
 });

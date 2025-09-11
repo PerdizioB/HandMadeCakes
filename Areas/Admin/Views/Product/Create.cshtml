@@ -6,45 +6,109 @@
     ViewData["Title"] = "Create Product";
 }
 
-<h1>Create Product</h1>
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
 
-<form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+            <div class="card shadow-sm rounded-4 p-4 border-0">
+                <h2 class="text-center mb-4 fw-bold" style="font-family: 'Playfair Display', serif; color: #7b6e4f;">
+                    Create New Product
+                </h2>
+
+                <form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
+
+                    <!-- Image Preview -->
+                    <div class="text-center mb-4 position-relative">
+                        <label for="ImageFile" class="d-inline-block rounded-4 overflow-hidden position-relative"
+                               style="cursor:pointer; border: 2px dashed #7b6e4f; width: 180px; height: 240px; display: block; margin-left: auto; margin-right: auto;">
+                            <img id="img" src="/imagem/placeholder.png" alt="Product Image Preview"
+                                 style="width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease;"
+                                 class="rounded-4" />
+                            <div class="position-absolute top-50 start-50 translate-middle text-muted fw-semibold"
+                                 style="pointer-events:none; user-select:none;">
+                                Click to upload image
+                            </div>
+                        </label>
+                        <input type="file" id="ImageFile" name="foto" class="form-control d-none" accept="image/*" />
+                    </div>
+
+                    <!-- Product Name -->
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-semibold">Name</label>
+                        <input asp-for="Name" class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2" placeholder="Enter product name" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="mb-3">
+                        <label asp-for="Category" class="form-label fw-semibold">Category</label>
+                        <select asp-for="Category" asp-items="Html.GetEnumSelectList<ProductCategory>()"
+                                class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"></select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label fw-semibold">Price ($)</label>
+                        <input asp-for="Price" type="number" min="1" step="0.01"
+                               class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"
+                               placeholder="Set the price" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label asp-for="Description" class="form-label fw-semibold">Description</label>
+                        <textarea asp-for="Description" rows="4" placeholder="Describe your product..."
+                                  class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+
+                    <!-- Imagens adicionais -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Additional Images</label>
+                        <input type="file" name="extraImages" class="form-control" accept="image/*" multiple />
+                        <div id="extraPreview" class="d-flex flex-wrap gap-2 mt-3"></div>
+                    </div>
+
+
+                    <!-- Buttons -->
+                    <div class="d-flex gap-3 justify-content-center mt-4">
+                        <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm">
+                            <i class="bi bi-plus-circle me-2"></i> Create
+                        </button>
+                        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
+                            <i class="bi bi-arrow-left-circle me-2"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Category"></label>
-        <select asp-for="Category" asp-items="Html.GetEnumSelectList<ProductCategory>()" class="form-control"></select>
-        <span asp-validation-for="Category" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Price"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Cover"></label>
-        <input asp-for="Cover" class="form-control" />
-        <span asp-validation-for="Cover" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Create</button>
-    <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-secondary">Cancel</a>
-</form>
+</div>
 
 @section Scripts {
     @(await Html.PartialAsync("_ValidationScriptsPartial"))
+
+    <script>
+        const inputFile = document.querySelector("#ImageFile");
+        const imgPreview = document.querySelector("#img");
+        const uploadLabel = imgPreview.nextElementSibling;
+
+        inputFile.addEventListener("change", function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgPreview.src = e.target.result;
+                    if(uploadLabel) uploadLabel.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imgPreview.src = "/imagem/placeholder.png";
+                if(uploadLabel) uploadLabel.style.display = 'block';
+            }
+        });
+    </script>
 }
-
-

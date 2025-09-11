@@ -33,6 +33,19 @@ namespace HandMadeCakes.Data
             modelBuilder.Entity<OrderItem>()
                 .Property(oi => oi.Price)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<CakeImage>()
+                .HasOne(ci => ci.Cake)       // cada imagem tem 1 bolo
+                .WithMany(c => c.Images)     // cada bolo tem muitas imagens
+                .HasForeignKey(ci => ci.CakeId) // fk
+                .OnDelete(DeleteBehavior.Cascade); // deletar bolo = deleta imagens
+
+            modelBuilder.Entity<ProductImage>()
+                .HasOne(pi => pi.Product)       // cada imagem tem 1 produto
+                .WithMany(p => p.Images)     // cada produto tem muitas imagens
+                .HasForeignKey(pi => pi.ProductId) // fk
+                .OnDelete(DeleteBehavior.Cascade); // deletar bolo = deleta imagens
+
         }
     }
 }

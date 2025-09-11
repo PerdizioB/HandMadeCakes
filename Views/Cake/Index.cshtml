@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<CakeModel>
+@using System.Globalization
 
 <div class="container py-5">
     <h2 class="mb-5 text-center fw-bold" style="font-family: 'Playfair Display', serif; color:#2c6e49;">
@@ -23,8 +24,9 @@
                                 </h5>
                             </a>
                             <p class="card-text text-muted small mb-3">@cake.Description</p>
-                            <p class="fw-bold text-success fs-5 mb-3">$@cake.Price.ToString("F2")</p>
-
+                            <p class="fw-bold text-success fs-5 mb-3">
+                                @cake.Price.ToString("C", new CultureInfo("en-GB"))
+                            </p>
                             <form asp-controller="Cart" asp-action="Add" method="post" class="d-grid">
                                 <input type="hidden" name="id" value="@cake.Id" />
                                 <input type="hidden" name="name" value="@cake.Flavor" />

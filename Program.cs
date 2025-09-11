@@ -3,34 +3,34 @@ using HandMadeCakes.Models;
 using HandMadeCakes.Services;
 using HandMadeCakes.Services.Cake;
 using HandMadeCakes.Services.Cart;
-using HandMadeCakes.Services.Order;
+using HandMadeCakes.Services.Orders;
 using HandMadeCakes.Services.Product;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configura a API Key do Stripe
+// Configure Stripe API Key
 Stripe.StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
 
-// Adiciona conexão com banco de dados
+// Add database connection
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Configura o Identity com EF e Roles
+// Configure Identity with EF and Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>();
 
-// Serviços customizados
+// Custom services
 builder.Services.AddScoped<ICakeInterface, CakeService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICheckoutService, CheckoutService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-;
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -39,10 +39,9 @@ builder.Services.AddSession();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Configura CORS para seu frontend e ngrok
+// Configure CORS for your frontend and ngrok
 builder.Services.AddCors(options =>
 {
-
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("https://localhost:7065", "https://45c1ce367562.ngrok-free.app")
               .AllowAnyHeader()
@@ -50,10 +49,14 @@ builder.Services.AddCors(options =>
               .AllowCredentials());
 });
 
-
 var app = builder.Build();
 
-// Criar roles e usuário admin ao iniciar
+// Set global culture to British (en-GB)
+var cultureInfo = new CultureInfo("en-GB");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+// Create roles and admin user on startup
 async Task CreateRolesAndAdminAsync(IServiceProvider serviceProvider)
 {
     var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
@@ -83,7 +86,7 @@ async Task CreateRolesAndAdminAsync(IServiceProvider serviceProvider)
     }
 }
 
-// Executa criação de roles e admin no escopo
+// Execute role and admin creation within scope
 using (var scope = app.Services.CreateScope())
 {
     await CreateRolesAndAdminAsync(scope.ServiceProvider);
@@ -100,7 +103,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// CORS deve vir antes de Authentication/Authorization
+// CORS must come before Authentication/Authorization
 app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
