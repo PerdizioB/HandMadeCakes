@@ -9,6 +9,21 @@
     --border-light: #ccc;
     --shadow-light: rgba(0, 0, 0, 0.1);
 }
+/* Home Page */
+.home-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary);
+}
+
+.home-subtitle {
+    font-style: italic;
+    margin-top: 0.5rem;
+    color: #748c5b;
+}
+
+.card-title {
+    color: var(--primary);
+}
 
 /* === Base Styles === */
 body {

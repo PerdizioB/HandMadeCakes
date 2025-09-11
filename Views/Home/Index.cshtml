@@ -9,15 +9,17 @@
 }
 <div class="py-5 bg-light">
     <div class="container">
+        <!-- Hero text -->
         <div class="row mb-5">
             <div class="col-lg-6 mx-auto text-center">
-                <h1 class="display-4 fw-bold" style="font-family: 'Playfair Display', serif; color: #7b6e4f;">
+                <h1 class="home-title">
                     Celebrate In Style
                 </h1>
-                <h5 class="fst-italic mt-2" style="color: #748c5b;">Birthday Cakes</h5>
+                <h5 class="home-subtitle">Birthday Cakes</h5>
             </div>
         </div>
 
+        <!-- Cake cards -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
             @if (Model != null && Model.Any())
             {
@@ -30,7 +32,9 @@
                             </a>
 
                             <div class="card-body text-center">
-                                <h6 class="card-title text-truncate fw-semibold" title="@cake.Flavor" style="color: #7b6e4f;">@cake.Flavor</h6>
+                                <h6 class="card-title text-truncate fw-semibold" title="@cake.Flavor">
+                                    @cake.Flavor
+                                </h6>
 
                                 <div class="d-grid gap-2">
                                     <a asp-controller="Cake" asp-action="Details" asp-route-id="@cake.Id" class="btn btn-primary btn-sm">
@@ -43,7 +47,6 @@
                                             <a asp-controller="Cake" asp-action="Edit" asp-route-id="@cake.Id" class="btn btn-outline-primary btn-sm flex-fill">
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
-                                           
                                         </div>
                                     }
                                 </div>
@@ -51,7 +54,6 @@
                         </div>
                     </div>
                 }
-
             }
             else
             {
