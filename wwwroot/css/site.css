@@ -271,3 +271,34 @@ h2.text-center {
     #payment-form button:hover {
         background-color: var(--primary);
     }
+/* === Hero Banner Novo === */
+.hero-banner {
+    background-color: #f5f0e8;
+    padding: 80px 0;
+}
+
+.hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--primary-dark);
+    line-height: 1.2;
+}
+
+.hero-img {
+    max-height: 450px;
+    object-fit: contain;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2rem;
+    }
+
+    .hero-img {
+        max-height: 300px;
+        margin-top: 20px;
+    }
+}
+

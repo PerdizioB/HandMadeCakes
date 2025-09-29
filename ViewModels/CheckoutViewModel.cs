@@ -27,5 +27,13 @@ namespace HandMadeCakes.ViewModels
         [Required]
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
+
+        [Required(ErrorMessage = "Delivery date is required")]
+        [DataType(DataType.Date)]
+        public DateTime? DeliveryDate { get; set; }
+
+        [Required(ErrorMessage = "Delivery time is required")]
+        public string DeliveryTime { get; set; }
+
     }
 }

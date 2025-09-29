@@ -32,5 +32,10 @@ namespace HandMadeCakes.Models
         public bool IsPaid { get; set; } = false;
 
         public ApplicationUser? User { get; set; }
+        [Required]
+        public DateTime DeliveryDate { get; set; }
+       [Required]
+        public string DeliveryTime { get; set; }
     }
 }
+

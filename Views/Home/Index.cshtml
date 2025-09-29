@@ -7,18 +7,11 @@
     ViewData["Title"] = "Home";
     var isAdmin = User.IsInRole("Admin");
 }
+
+
+<!-- Lista de bolos -->
 <div class="py-5 bg-light">
     <div class="container">
-        <!-- Hero text -->
-        <div class="row mb-5">
-            <div class="col-lg-6 mx-auto text-center">
-                <h1 class="home-title">
-                    Celebrate In Style
-                </h1>
-                <h5 class="home-subtitle">Birthday Cakes</h5>
-            </div>
-        </div>
-
         <!-- Cake cards -->
         <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
             @if (Model != null && Model.Any())

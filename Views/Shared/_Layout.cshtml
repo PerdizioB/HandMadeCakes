@@ -24,7 +24,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
-
 </head>
 <body>
     @* Sidebar only for admins *@
@@ -125,12 +124,21 @@
         </div>
     </nav>
 
-    @* Hero section *@
-    <section class="hero-section" style="@(isAdmin ? "margin-left: 220px;" : "")">
-        <div class="hero-content">
-            <h1 class="display-5 fw-bold">Fresh Handmade Cakes!</h1>
-            <p class="lead">Delicious, beautiful, and made with love.</p>
-            <a href="@Url.Action("Index", "Cake")" class="btn1 mt-3 rounded">Shop Now</a>
+    @* Hero Banner *@
+    <section class="hero-banner d-flex align-items-center" style="@(isAdmin ? "margin-left: 220px;" : "")">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Texto -->
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="hero-title">DELICIOUS <br> HANDMADE <br> CAKES</h1>
+                    <a href="@Url.Action("Index", "Cake")" class="btn btn-outline-dark btn-lg mt-3">ORDER NOW</a>
+                </div>
+
+                <!-- Imagem -->
+                <div class="col-lg-6 text-center">
+                    <img src="/imagem/banner.png" alt="Handmade Cake" class="hero-img img-fluid">
+                </div>
+            </div>
         </div>
     </section>
 

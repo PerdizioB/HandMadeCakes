@@ -29,6 +29,8 @@ namespace HandMadeCakes.Services.Orders
                 OrderDate = DateTime.UtcNow,
                 Status = "Pending",
                 IsPaid = false,
+                DeliveryDate = (DateTime)checkoutData.DeliveryDate,  // NOVO
+                DeliveryTime = checkoutData.DeliveryTime,  // NOVO
                 OrderItems = cartItems.Select(item => new OrderItem
                 {
                     CakeId = item.CakeId,
