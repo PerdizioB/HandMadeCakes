@@ -71,19 +71,28 @@ async Task CreateRolesAndAdminAsync(IServiceProvider serviceProvider)
 
     var adminEmail = "admin@handmadecakes.com";
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
     if (adminUser == null)
     {
+        // Cria novo admin
         adminUser = new ApplicationUser
         {
             UserName = adminEmail,
             Email = adminEmail,
             EmailConfirmed = true
         };
-
-        var result = await userManager.CreateAsync(adminUser, "Admin123!");
-        if (result.Succeeded)
-            await userManager.AddToRoleAsync(adminUser, "Admin");
+        await userManager.CreateAsync(adminUser, "Admin123!");
     }
+    else
+    {
+        // Atualiza a senha existente
+        var token = await userManager.GeneratePasswordResetTokenAsync(adminUser);
+        await userManager.ResetPasswordAsync(adminUser, token, "Admin123!");
+    }
+
+    // Garante que o usuário esteja na role Admin
+    if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+        await userManager.AddToRoleAsync(adminUser, "Admin");
 }
 
 // Execute role and admin creation within scope

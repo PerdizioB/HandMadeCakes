@@ -52,6 +52,7 @@ namespace HandMadeCakes.Services.Cake
                 Description = cakeCreateDto.Description,
                 Price = cakeCreateDto.Price,
                 Cover = nomeCaminhoCover,
+                ProductId = cakeCreateDto.ProductId,
                 Images = new List<CakeImage>()
             };
 
@@ -80,7 +81,10 @@ namespace HandMadeCakes.Services.Cake
         {
             try
             {
-                return await _context.Cake.ToListAsync();
+                return await _context.Cake
+                    .Include(c => c.Product)
+                    .Where(c => c.Product.IsActive)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -94,7 +98,8 @@ namespace HandMadeCakes.Services.Cake
             {
                 return await _context.Cake
                     .Include(c => c.Images)
-                    .FirstOrDefaultAsync(c => c.Id == id);
+                    .Include(c => c.Product)
+                    .FirstOrDefaultAsync(c => c.Id == id && c.Product.IsActive);
             }
             catch (Exception ex)
             {
@@ -166,7 +171,9 @@ namespace HandMadeCakes.Services.Cake
             try
             {
                 return await _context.Cake
-                    .Where(c => c.Flavor.Contains(pesquisar ?? string.Empty))
+                    .Include(c => c.Product)
+                    .Where(c => c.Flavor.Contains(pesquisar ?? string.Empty)
+                    && c.Product.IsActive)
                     .ToListAsync();
             }
             catch (Exception ex)

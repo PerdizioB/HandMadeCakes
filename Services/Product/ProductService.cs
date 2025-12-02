@@ -73,5 +73,14 @@ namespace HandMadeCakes.Services.Product
 
             return true;
         }
+        public async Task<List<ProductModel>> GetAllActiveAsync()
+        {
+            return await _context.Product
+                .Where(p => p.IsActive)
+                .ToListAsync();
+        }
+
+        //public async bool IsActive { get; set; }
+
     }
 }

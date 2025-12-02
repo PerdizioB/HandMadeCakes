@@ -1,15 +1,20 @@
 ﻿using HandMadeCakes.Dto;
 using HandMadeCakes.Models;
 using HandMadeCakes.Services.Cake;
+using HandMadeCakes.Services.Product;
 using Microsoft.AspNetCore.Mvc;
 
 public class CakeController : Controller
 {
     private readonly ICakeInterface _cakeInterface;
+    private readonly IProductService _productService;
 
-    public CakeController(ICakeInterface cakeInterface)
+
+    public CakeController(ICakeInterface cakeInterface, IProductService productService)
     {
         _cakeInterface = cakeInterface;
+        _productService = productService;
+
     }
 
     public async Task<IActionResult> Index()
@@ -21,8 +26,9 @@ public class CakeController : Controller
 
     // GET para abrir o formulário de registro
     [HttpGet]
-    public IActionResult Register()
+    public async Task<IActionResult> Register()
     {
+        ViewBag.Products = await _productService.GetAllActiveAsync();
         return View();
     }
 

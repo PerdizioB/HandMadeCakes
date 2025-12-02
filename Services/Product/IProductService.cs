@@ -13,5 +13,10 @@ namespace HandMadeCakes.Services.Product
         Task<ProductModel> CreateAsync(ProductModel product);
         Task<ProductModel> UpdateAsync(int id, ProductModel product);
         Task<bool> DeleteAsync(int id);
+
+        Task<List<ProductModel>> GetAllActiveAsync();
+
+       // Task<bool>  GetAllActiveAsync();
+
     }
 }
