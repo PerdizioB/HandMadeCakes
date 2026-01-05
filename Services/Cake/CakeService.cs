@@ -17,6 +17,7 @@ namespace HandMadeCakes.Services.Cake
             _sistema = sistema.WebRootPath;
         }
 
+        // Gera caminho único para imagem
         public string GeraCaminhoArquivo(IFormFile foto)
         {
             var codigoUnico = Guid.NewGuid().ToString();
@@ -39,37 +40,62 @@ namespace HandMadeCakes.Services.Cake
             return nomeArquivo;
         }
 
-        public async Task<CakeModel> CriarCake(CakeCreateDto cakeCreateDto, IFormFile coverFoto, List<IFormFile>? fotos)
+        // Cria Cake
+        public async Task<CakeModel> CriarCake(CakeCreateDto cakeCreateDto, IFormFile? coverFoto, List<IFormFile>? fotos)
         {
-            if (coverFoto == null)
-                throw new Exception("The main image (cover) is required.");
+            // Buscar Product
+            var product = await _context.Product.FindAsync(cakeCreateDto.ProductId);
+            if (product == null)
+                throw new Exception("Product not found. Cake cannot be created.");
 
-            var nomeCaminhoCover = GeraCaminhoArquivo(coverFoto);
+            // Determinar cover (PADRONIZADO COM PRODUCT)
+            string coverPath;
 
+            if (!string.IsNullOrEmpty(product.Cover))
+            {
+                // Usa exatamente a mesma imagem do Product
+                coverPath = product.Cover;
+            }
+            else
+            {
+                // fallback
+                coverPath = "/images/default-cake.png";
+            }
+
+
+            // Criar CakeModel
             var cake = new CakeModel
             {
-                Flavor = cakeCreateDto.Flavor,
-                Description = cakeCreateDto.Description,
-                Price = cakeCreateDto.Price,
-                Cover = nomeCaminhoCover,
+                Flavor = !string.IsNullOrEmpty(cakeCreateDto.Flavor) ? cakeCreateDto.Flavor : product.Name ?? "Unknown",
+                Description = !string.IsNullOrEmpty(cakeCreateDto.Description) ? cakeCreateDto.Description : product.Description ?? "",
+                Price = cakeCreateDto.Price != 0 ? cakeCreateDto.Price : product.Price,
+                Cover = coverPath,
                 ProductId = cakeCreateDto.ProductId,
                 Images = new List<CakeImage>()
             };
 
-            _context.Add(cake);
-            await _context.SaveChangesAsync();
+            // Salvar Cake
+            try
+            {
+                _context.Cake.Add(cake);
+                await _context.SaveChangesAsync(); // Gera Id
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to save Cake: " + ex.Message);
+            }
 
+            // Salvar imagens extras
             if (fotos != null && fotos.Any())
             {
                 foreach (var foto in fotos)
                 {
-                    var nomeCaminhoImagem = GeraCaminhoArquivo(foto);
-                    var cakeImage = new CakeImage
+                    var path = GeraCaminhoArquivo(foto);
+                    _context.CakeImages.Add(new CakeImage
                     {
                         CakeId = cake.Id,
-                        ImagePath = nomeCaminhoImagem
-                    };
-                    _context.CakeImages.Add(cakeImage);
+                        ImagePath = path
+                    });
                 }
                 await _context.SaveChangesAsync();
             }
@@ -77,13 +103,14 @@ namespace HandMadeCakes.Services.Cake
             return cake;
         }
 
+        // Buscar todos os Cakes
         public async Task<List<CakeModel>> GetCakes()
         {
             try
             {
                 return await _context.Cake
                     .Include(c => c.Product)
-                    .Where(c => c.Product.IsActive)
+                    .Include(c => c.Images)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -92,6 +119,7 @@ namespace HandMadeCakes.Services.Cake
             }
         }
 
+        // Buscar Cake por Id
         public async Task<CakeModel?> GetCakePorId(int id)
         {
             try
@@ -99,7 +127,7 @@ namespace HandMadeCakes.Services.Cake
                 return await _context.Cake
                     .Include(c => c.Images)
                     .Include(c => c.Product)
-                    .FirstOrDefaultAsync(c => c.Id == id && c.Product.IsActive);
+                    .FirstOrDefaultAsync(c => c.Id == id);
             }
             catch (Exception ex)
             {
@@ -107,73 +135,61 @@ namespace HandMadeCakes.Services.Cake
             }
         }
 
+        // Editar Cake
         public async Task<CakeModel> Edit(CakeModel Cake, IFormFile? coverFoto, List<IFormFile>? fotos)
         {
-            //DB fetch
-            var cakeBanco = await _context.Cake.Include(c => c.Images).FirstOrDefaultAsync(c => c.Id == Cake.Id);
-            if (cakeBanco == null) throw new Exception("Cake not found.");
+            var cakeBanco = await _context.Cake
+                .Include(c => c.Images)
+                .FirstOrDefaultAsync(c => c.Id == Cake.Id);
 
-            // Update cover image
-            if (coverFoto != null)
-            {
-                var caminhoCoverExistente = Path.Combine(_sistema, "imagem", cakeBanco.Cover);
-                if (File.Exists(caminhoCoverExistente)) // Delete existing cover image
-                    File.Delete(caminhoCoverExistente);
+            if (cakeBanco == null)
+                throw new Exception("Cake not found.");
 
-                cakeBanco.Cover = GeraCaminhoArquivo(coverFoto);// Save new cover image  (generates unique filename )
-            }
-
-            // Update basic data
+            // Atualizar dados
             cakeBanco.Flavor = Cake.Flavor;
             cakeBanco.Description = Cake.Description;
             cakeBanco.Price = Cake.Price;
 
-            // Save new extra images, if any
+            // Salvar imagens extras
             if (fotos != null && fotos.Any())
             {
                 foreach (var foto in fotos)
                 {
-                    var nomeImagem = GeraCaminhoArquivo(foto);
-                    var cakeImage = new CakeImage
+                    var path = GeraCaminhoArquivo(foto);
+                    _context.CakeImages.Add(new CakeImage
                     {
                         CakeId = cakeBanco.Id,
-                        ImagePath = nomeImagem
-                    };
-                    _context.CakeImages.Add(cakeImage);
+                        ImagePath = path
+                    });
                 }
             }
 
             await _context.SaveChangesAsync();
-
             return cakeBanco;
         }
+
+
+        // Remover Cake
         public async Task<CakeModel> RemoverCake(int id)
         {
-            try
-            {
-                var cake = await _context.Cake.FirstOrDefaultAsync(c => c.Id == id);
-                if (cake == null)
-                    throw new Exception("Cake not found.");
+            var cake = await _context.Cake.FirstOrDefaultAsync(c => c.Id == id);
+            if (cake == null) throw new Exception("Cake not found.");
 
-                _context.Remove(cake);
-                await _context.SaveChangesAsync();
+            _context.Cake.Remove(cake);
+            await _context.SaveChangesAsync();
 
-                return cake;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error removing cake: " + ex.Message);
-            }
+            return cake;
         }
 
+        // Filtrar Cakes
         public async Task<List<CakeModel>> GetCakesFiltro(string? pesquisar)
         {
             try
             {
                 return await _context.Cake
                     .Include(c => c.Product)
-                    .Where(c => c.Flavor.Contains(pesquisar ?? string.Empty)
-                    && c.Product.IsActive)
+                    .Include(c => c.Images)
+                    .Where(c => c.Flavor.Contains(pesquisar ?? string.Empty))
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -182,15 +198,9 @@ namespace HandMadeCakes.Services.Cake
             }
         }
 
-        // Unimplemented methods can throw NotImplementedException
-        public Task<List<CakeModel>> GetCake()
-            => throw new NotImplementedException();
-
-        public Task<List<CakeModel>> GetCakeFiltro(string? pesquisar)
-            => throw new NotImplementedException();
-
-        public Task<CakeModel> EditarCake(CakeModel Cake, IFormFile? foto)
-            => throw new NotImplementedException();
+        // Métodos não implementados
+        public Task<List<CakeModel>> GetCake() => throw new NotImplementedException();
+        public Task<List<CakeModel>> GetCakeFiltro(string? pesquisar) => throw new NotImplementedException();
+        public Task<CakeModel> EditarCake(CakeModel Cake, IFormFile? foto) => throw new NotImplementedException();
     }
-
 }

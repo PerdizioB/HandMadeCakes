@@ -7,98 +7,125 @@
 }
 
 <div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
 
-            <div class="card shadow-sm rounded-4 p-4 border-0">
-                <h2 class="text-center mb-4 fw-bold" style="font-family: 'Playfair Display', serif; color: #7b6e4f;">
-                    Create New Product
-                </h2>
+    <h2 class="text-center mb-4 fw-bold" style="font-family: 'Playfair Display', serif; color: #7b6e4f;">
+        Create New Product
+    </h2>
 
-                <form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
-
-                    <!-- Image Preview -->
-                    <div class="text-center mb-4 position-relative">
-                        <label for="ImageFile" class="d-inline-block rounded-4 overflow-hidden position-relative"
-                               style="cursor:pointer; border: 2px dashed #7b6e4f; width: 180px; height: 240px; display: block; margin-left: auto; margin-right: auto;">
-                            <img id="img" src="/imagem/placeholder.png" alt="Product Image Preview"
-                                 style="width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease;"
-                                 class="rounded-4" />
-                            <div class="position-absolute top-50 start-50 translate-middle text-muted fw-semibold"
-                                 style="pointer-events:none; user-select:none;">
-                                Click to upload image
-                            </div>
-                        </label>
-                        <input type="file" id="ImageFile" name="foto" class="form-control d-none" accept="image/*" />
-                    </div>
-
-                    <!-- Product Name -->
-                    <div class="mb-3">
-                        <label asp-for="Name" class="form-label fw-semibold">Name</label>
-                        <input asp-for="Name" class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2" placeholder="Enter product name" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-
-                    <!-- Category -->
-                    <div class="mb-3">
-                        <label asp-for="Category" class="form-label fw-semibold">Category</label>
-                        <select asp-for="Category" asp-items="Html.GetEnumSelectList<ProductCategory>()"
-                                class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"></select>
-                        <span asp-validation-for="Category" class="text-danger"></span>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="mb-3">
-                        <label asp-for="Price" class="form-label fw-semibold">Price ($)</label>
-                        <input asp-for="Price" type="number" min="1" step="0.01"
-                               class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"
-                               placeholder="Set the price" />
-                        <span asp-validation-for="Price" class="text-danger"></span>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="mb-3">
-                        <label asp-for="Description" class="form-label fw-semibold">Description</label>
-                        <textarea asp-for="Description" rows="4" placeholder="Describe your product..."
-                                  class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                    </div>
-
-                    <!-- Imagens adicionais -->
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Additional Images</label>
-                        <input type="file" name="extraImages" class="form-control" accept="image/*" multiple />
-                        <div id="extraPreview" class="d-flex flex-wrap gap-2 mt-3"></div>
-                    </div>
-
-
-                    <!-- Buttons -->
-                    <div class="form-check mb-3">
-                        <input asp-for="IsActive" class="form-check-input" type="checkbox" />
-                        <label asp-for="IsActive" class="form-check-label">
-                            Active (Visible to customers)
-                        </label>
-                    </div>
-
-                    <div class="d-flex gap-3 justify-content-center mt-4">
-                        <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm">
-                            <i class="bi bi-plus-circle me-2"></i> Create
-                        </button>
-                        <a asp-area="Admin" asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 py-2 fw-semibold">
-                            <i class="bi bi-arrow-left-circle me-2"></i> Cancel
-                        </a>
-                    </div>
-                </form>
+    <!-- CARDS-here choose category-->
+    <!--cake-->
+    <div class="row justify-content-center mb-4">
+        <div class="col-12 col-md-5 mb-3">
+            <div class="card shadow-sm rounded-4 p-4 text-center cursor-pointer card-select" data-category="Cake">
+                <h4>Cake</h4>
+                <img src="/images/icons/cake-icon.png" alt="Cake" class="img-fluid my-3" style="height:120px;">
+                <p>Create a new Cake product</p>
             </div>
-
+        </div>
+        <!--candy-->
+        <div class="col-12 col-md-5 mb-3">
+            <div class="card shadow-sm rounded-4 p-4 text-center cursor-pointer card-select" data-category="Sweet">
+                <h4>Sweet</h4>
+                <img src="/images/icons/Others-icon.png" alt="Sweet" class="img-fluid my-3" style="height:120px;">
+                <p>Create Sweet type of product</p>
+            </div>
+        </div>
+        <!--Savoury-->
+        <div class="col-12 col-md-5 mb-3">
+            <div class="card shadow-sm rounded-4 p-4 text-center cursor-pointer card-select" data-category="Savoury">
+                <h4>Savoury</h4>
+                <img src="/images/icons/Others-icon.png" alt="Savoury" class="img-fluid my-3" style="height:120px;">
+                <p>Create Savoury type of product</p>
+            </div>
         </div>
     </div>
+
+    <!-- FORM -->
+    <div id="productForm" style="display:none;">
+        <form asp-area="Admin" asp-controller="Product" asp-action="Create" method="post" enctype="multipart/form-data">
+
+            <!-- Hidden para categoria -->
+            <input type="hidden" id="Category" name="Category" value="" />
+
+            <!-- Image Preview -->
+            <div class="text-center mb-4 position-relative">
+                <label for="ImageFile" class="d-inline-block rounded-4 overflow-hidden position-relative"
+                       style="cursor:pointer; border: 2px dashed #7b6e4f; width: 180px; height: 240px; display: block; margin-left: auto; margin-right: auto;">
+                    <img id="img" src="/imagem/placeholder.png" alt="Product Image Preview"
+                         style="width: 100%; height: 100%; object-fit: cover; transition: filter 0.3s ease;"
+                         class="rounded-4" />
+                    <div class="position-absolute top-50 start-50 translate-middle text-muted fw-semibold"
+                         style="pointer-events:none; user-select:none;">
+                        Click to upload image
+                    </div>
+                </label>
+                <input type="file" id="ImageFile" name="foto" class="form-control d-none" accept="image/*" />
+            </div>
+
+            <!-- Product Name -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Name</label>
+                <input name="Name" class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2" placeholder="Enter product name" />
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Price ($)</label>
+                <input name="Price" type="number" min="1" step="0.01" class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2" placeholder="Set price" />
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Description</label>
+                <textarea name="Description" rows="4" placeholder="Describe your product..." class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2"></textarea>
+            </div>
+
+            <!-- Campos extras para Cake -->
+            <div id="cakeFields" style="display:none;">
+                <h4 class="mt-4 mb-3 fw-bold" style="color: #7b6e4f;">Cake Details</h4>
+                <!-- tem que mudar no banco, miudei aqui para teste-->
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Message </label>
+                    <input name="CakeFlavor" class="form-control shadow-none border border-2 border-light rounded-pill px-3 py-2" placeholder="Chocolate, Vanilla..." />
+                </div>
+
+              
+
+            <!-- Additional Images -->
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Additional Images</label>
+                <input type="file" name="extraImages" class="form-control" accept="image/*" multiple />
+            </div>
+            </div>
+     
+
+            <div class="d-flex gap-3 justify-content-center mt-4">
+                <button type="submit" class="btn btn-success rounded-pill px-4 py-2 fw-semibold shadow-sm">Create</button>
+            </div>
+
+        </form>
+    </div>
+
 </div>
 
 @section Scripts {
-    @(await Html.PartialAsync("_ValidationScriptsPartial"))
-
     <script>
+        const cards = document.querySelectorAll('.card-select');
+        const productForm = document.getElementById('productForm');
+        const cakeFields = document.getElementById('cakeFields');
+        const categoryInput = document.getElementById('Category');
+
+        cards.forEach(card => {
+            card.addEventListener('click', () => {
+                productForm.style.display = 'block';
+                const category = card.getAttribute('data-category');
+                categoryInput.value = category;
+                cakeFields.style.display = category === 'Cake' ? 'block' : 'none';
+                productForm.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Preview da imagem
         const inputFile = document.querySelector("#ImageFile");
         const imgPreview = document.querySelector("#img");
         const uploadLabel = imgPreview.nextElementSibling;

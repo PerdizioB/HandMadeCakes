@@ -1,5 +1,6 @@
 ﻿using HandMadeCakes.Models;
 using HandMadeCakes.Models.Enums;
+using HandMadeCakes.Services.Cake;
 using HandMadeCakes.Services.Product;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,12 @@ namespace HandMadeCakes.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICakeInterface _cakeService;
 
-        public ProductController(IProductService productService)
+        public ProductController(IProductService productService, ICakeInterface cakeService)
         {
             _productService = productService;
+            _cakeService = cakeService;
         }
 
         // GET: Admin/Product
@@ -39,7 +42,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
         // GET: Admin/Product/Create
         public IActionResult Create()
         {
-            // ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
+             ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
             return View();
         }
 
@@ -98,7 +101,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductModel product, IFormFile foto, List<IFormFile> extraImages)
+        public async Task<IActionResult> Create(ProductModel product, IFormFile foto, List<IFormFile> extraImages, string? CakeFlavor, string? CakeDescription)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +109,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
                 return View(product);
             }
 
-            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+            var folder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
 
             // cria a pasta caso não exista
             if (!Directory.Exists(folder))
@@ -125,7 +128,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
                     await foto.CopyToAsync(stream);
                 }
 
-                product.Cover = "/images/products/" + fileName;
+                product.Cover = "/images/" + fileName;
             }
 
             // imagens adicionais
@@ -147,7 +150,7 @@ namespace HandMadeCakes.Areas.Admin.Controllers
 
                         product.Images.Add(new ProductImage
                         {
-                            ImagePath = "/images/products/" + fileName
+                            ImagePath = "/images/" + fileName
                         });
                     }
                 }
@@ -156,7 +159,25 @@ namespace HandMadeCakes.Areas.Admin.Controllers
             // salva no banco
             await _productService.CreateAsync(product);
 
+
+            // se for Cake, cria CakeModel automaticamente
+            if (product.Category == ProductCategory.Cake)
+            {
+                var dto = new CakeCreateDto
+                {
+                    ProductId = product.Id,
+                    Flavor = CakeFlavor ?? product.Name,
+                    Description = CakeDescription ?? product.Description,
+                    Price = product.Price
+                };
+
+                // coverFoto vem do upload, pode ser null
+                await _cakeService.CriarCake(dto, foto, null);
+            }
+
             return RedirectToAction(nameof(Index));
+
+
         }
     }
 }

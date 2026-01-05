@@ -39,6 +39,9 @@ namespace HandMadeCakes.Services.Product
         {
             _context.Product.Add(product);
             await _context.SaveChangesAsync();
+
+
+
             return product;
         }
 

@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\imagem\iconCake.png" />
-    <Content Remove="wwwroot\imagem\inicio.jpg" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
@@ -30,16 +25,7 @@
 
   <ItemGroup>
     <Folder Include="assets\bootstrap\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\imagem\banner.jpg" />
-    <None Include="wwwroot\imagem\cake.jpg" />
-    <None Include="wwwroot\imagem\cesta.jfif" />
-    <None Include="wwwroot\imagem\doce.jfif" />
-    <None Include="wwwroot\imagem\escrita.jpg" />
-    <None Include="wwwroot\imagem\iconCake.png" />
-    <None Include="wwwroot\imagem\inicio.jpg" />
+    <Folder Include="wwwroot\image\" />
   </ItemGroup>
 
 </Project>

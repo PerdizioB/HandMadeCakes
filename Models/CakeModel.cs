@@ -9,7 +9,7 @@ namespace HandMadeCakes.Models
         public string Flavor { get; set; } = string.Empty;
         public string Cover { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public string? Category { get; set; }  // Candy, Rolls, Cakes
         public int ProductId { get; set; }
         public ProductModel Product { get; set; }

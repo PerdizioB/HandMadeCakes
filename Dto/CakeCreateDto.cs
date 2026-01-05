@@ -1,11 +1,9 @@
-﻿namespace HandMadeCakes.Dto
+﻿public class CakeCreateDto
 {
-    public class CakeCreateDto
-    {
-        public string Flavor { get; set; } = string.Empty;
-        public string Cover { get; set; } = string.Empty;
-        public string Description { get; set; } = string.Empty;
-        public double Price { get; set; }
-        public int ProductId { get; set; }
-    }
+    public string Flavor { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public decimal Price { get; set; } = 0m;  // decimal
+    public int ProductId { get; set; }
+
+
 }

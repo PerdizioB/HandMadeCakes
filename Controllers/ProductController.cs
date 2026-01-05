@@ -1,8 +1,12 @@
-﻿using HandMadeCakes.Models;
+﻿using HandMadeCakes.Dto;
+using HandMadeCakes.Models;
 using HandMadeCakes.Models.Enums;
+using HandMadeCakes.Services.Cake;
 using HandMadeCakes.Services.Product;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HandMadeCakes.Controllers
@@ -10,10 +14,13 @@ namespace HandMadeCakes.Controllers
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
+        private readonly ICakeInterface _cakeService;
 
-        public ProductController(IProductService productService)
+        // 🔹 Ajuste: injetando CakeService também
+        public ProductController(IProductService productService, ICakeInterface cakeService)
         {
             _productService = productService;
+            _cakeService = cakeService;
         }
 
         // GET: /Product
@@ -51,19 +58,28 @@ namespace HandMadeCakes.Controllers
                 return View(product);
             }
 
+            // 1️⃣ Cria o produto
             await _productService.CreateAsync(product);
+
+            // 2️⃣ Se for Cake, criar CakeModel automático
+            if (product.Category == ProductCategory.Cake)
+            {
+                var dto = new CakeCreateDto
+                {
+                    ProductId = product.Id,
+                    Flavor = product.Name ?? "",
+                    Description = product.Description ?? "",
+                    Price = product.Price, // ✅ decimal compatível
+                };
+
+                // Não há coverFoto nem imagens extras nesse momento
+                await _cakeService.CriarCake(dto, null, null);
+
+                // Redireciona para editar Cake (opcional)
+                return RedirectToAction("Edit", "Cake", new { id = product.Id });
+            }
+
             return RedirectToAction(nameof(Index));
-        }
-
-        // GET: /Product/Edit/5
-        public async Task<IActionResult> Edit(int id)
-        {
-            var product = await _productService.GetByIdAsync(id);
-            if (product == null)
-                return NotFound();
-
-            ViewBag.Categories = Enum.GetValues(typeof(ProductCategory));
-            return View(product);
         }
 
         // POST: /Product/Edit/5

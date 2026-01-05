@@ -8,7 +8,7 @@ namespace HandMadeCakes.Services.Cake
 
         Task<List<CakeModel>> GetCakes();
         Task<CakeModel> GetCakePorId(int id);
-        Task<CakeModel> CriarCake(CakeCreateDto CakeCreateDto, IFormFile coverFoto, List<IFormFile> fotos);
+        Task<CakeModel> CriarCake(CakeCreateDto CakeCreateDto, IFormFile? coverFoto, List<IFormFile> fotos);
         Task<CakeModel> EditarCake(CakeModel cake, IFormFile? foto);
         Task<CakeModel> Edit(CakeModel Cake, IFormFile? coverFoto, List<IFormFile>? fotos);
 

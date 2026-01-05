@@ -15,12 +15,12 @@
                 <div class="col">
                     <div class="card h-100 shadow-sm border-0 rounded-4 product-card">
                         <a asp-controller="Cake" asp-action="Details" asp-route-id="@cake.Id" class="text-decoration-none text-dark">
-                            <img src="/imagem/@cake.Cover" alt="@cake.Flavor" class="card-img-top rounded-top-4" style="height: 220px; object-fit: cover;">
+                            <img src="@cake.Product.Cover" alt="@cake.Flavor" class="card-img-top rounded-top-4" style="height: 220px; object-fit: cover;">
                         </a>
                         <div class="card-body text-center">
                             <a asp-controller="Cake" asp-action="Details" asp-route-id="@cake.Id" class="text-decoration-none">
                                 <h5 class="card-title fw-bold" style="font-family: 'Playfair Display', serif; color:#2c6e49;">
-                                    @cake.Flavor
+                                    @cake.Product.Name
                                 </h5>
                             </a>
                             <p class="card-text text-muted small mb-3">@cake.Description</p>
